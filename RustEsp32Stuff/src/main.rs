@@ -1,4 +1,3 @@
-
 #![allow(unused_imports)]
 use std::fs;
 use std::io::{Read, Write};
@@ -79,8 +78,8 @@ const PASS: &str = env!("RUST_ESP32_STD_DEMO_WIFI_PASS");
 fn main() -> Result<()> {
     // Bind the log crate to the ESP Logging facilities
     esp_idf_svc::log::EspLogger::initialize_default();
-
     info!("Starting main()");
+
     #[allow(unused)]
     let netif_stack = Arc::new(EspNetifStack::new()?);
     #[allow(unused)]
@@ -98,7 +97,6 @@ fn main() -> Result<()> {
 
     match wifi_result {
         Ok(wifi) => {
-            //test_tcp()?;
             test_https_client()?;
             {
                 info!("Dropping wifi.");
@@ -155,7 +153,7 @@ fn create_wifi(
 
     info!("Wifi configuration set, about to get status");
 
-    //thread::sleep(Duration::from_secs(10));
+    thread::sleep(Duration::from_secs(1));
 
     let now = Instant::now();
     let result = wifi.wait_status_with_timeout(Duration::from_secs(180), |status| !status.is_transitional());
@@ -179,32 +177,6 @@ fn create_wifi(
     Ok(wifi)
 }
 
-fn test_tcp() -> Result<()> {
-    info!("About to open a TCP connection to esp-rs.github.io port 80");
-
-    let mut stream = TcpStream::connect("esp-rs.github.io:80")?;
-
-    let err = stream.try_clone();
-    if let Err(err) = err {
-        info!(
-            "Duplication of file descriptors does not work (yet) on the ESP-IDF, as expected: {}",
-            err
-        );
-    }
-
-    stream.write_all("GET /book/tooling/espflash.html HTTP/1.0\n\n".as_bytes())?;
-
-    let mut result = Vec::new();
-
-    stream.read_to_end(&mut result)?;
-
-    info!(
-        "1.1.1.1 returned:\n=================\n{}\n=================\nSince it returned something, all is OK",
-        std::str::from_utf8(&result)?);
-
-    Ok(())
-}
-
 fn test_https_client() -> anyhow::Result<()> {
     use embedded_svc::http::{self, client::*, status, Headers, Status};
     use embedded_svc::io;
@@ -220,6 +192,10 @@ fn test_https_client() -> anyhow::Result<()> {
         ..Default::default()
     })?;
 
+    // let peripherals = esp_idf_hal::peripherals::Peripherals::take().unwrap();
+    // let mut led = peripherals.pins.gpio33.into_output()?;
+    // led.set_high()?;
+
     let mut response = client.get(&url)?.submit()?;
 
     let mut body = [0_u8; 3048];
@@ -227,6 +203,8 @@ fn test_https_client() -> anyhow::Result<()> {
     io::read_max(response.reader(), &mut body)?;
 
     let utf8_result = String::from_utf8((&body).to_vec());
+
+    // led.set_low()?;
 
     match utf8_result {
         Ok(v) => {
