@@ -54,6 +54,7 @@ use esp_idf_hal::gpio;
 use esp_idf_hal::i2c;
 use esp_idf_hal::prelude::*;
 use esp_idf_hal::spi;
+use esp_idf_hal::spi::SPI1;
 
 use esp_idf_sys::{self, c_types};
 use esp_idf_sys::{esp, EspError};
@@ -79,6 +80,10 @@ fn main() -> Result<()> {
     // Bind the log crate to the ESP Logging facilities
     esp_idf_svc::log::EspLogger::initialize_default();
     info!("Starting main()");
+
+    let peripherals = esp_idf_hal::peripherals::Peripherals::take().unwrap();
+    let spi1: SPI1 = peripherals.spi1;
+    let x = apa102_spi::Apa102::new(spi1);
 
     #[allow(unused)]
     let netif_stack = Arc::new(EspNetifStack::new()?);

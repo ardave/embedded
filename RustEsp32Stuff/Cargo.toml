@@ -45,6 +45,7 @@ embedded-graphics = "0.7"
 display-interface = "0.4"
 display-interface-spi = "0.4"
 smol = "1.2"
+apa102-spi = "0.3.2"
 
 [build-dependencies]
 embuild = "0.29"
