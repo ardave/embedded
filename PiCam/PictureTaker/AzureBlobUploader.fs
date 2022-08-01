@@ -10,9 +10,9 @@
         else
             Environment.GetEnvironmentVariable varName      
 
-    let sasUri() = "SasUri" |> envVarOrFail |> Uri
+    let sasUri() = "SASURI" |> envVarOrFail |> Uri
 
-    let azureBlobContainerName() = envVarOrFail "BlobContainerName"
+    let azureBlobContainerName() = envVarOrFail "BLOBCONTAINERNAME"
         
     let uploadPicture (blobUri: Uri) azureBlobContainerName (pictureData: BinaryData) = 
         let blobServiceClient = BlobServiceClient(blobUri, null)
