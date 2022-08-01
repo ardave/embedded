@@ -11,5 +11,6 @@ let ``Azure Storabe Blob Upload Integration Test`` (): unit =
     
     "test-image.jpg"
     |> File.OpenRead
+    |> BinaryData.FromStream
     |> AzureBlobUploader.uploadPicture uri blobContainerName
 

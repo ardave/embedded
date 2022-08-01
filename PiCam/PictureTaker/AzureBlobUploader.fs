@@ -14,10 +14,10 @@
 
     let azureBlobContainerName() = envVarOrFail "BlobContainerName"
         
-    let uploadPicture (blobUri: Uri) azureBlobContainerName (stream: Stream) = 
+    let uploadPicture (blobUri: Uri) azureBlobContainerName (pictureData: BinaryData) = 
         let blobServiceClient = BlobServiceClient(blobUri, null)
         let _blobContainerClient = blobServiceClient.GetBlobContainerClient azureBlobContainerName
         let n = DateTime.UtcNow
         let fileName = $"{n.Year}-{n.Month}-{n.Day} {n.Hour}:{n.Minute}:{n.Second}Z.jpg"
-        _blobContainerClient.UploadBlob(fileName, stream)
+        _blobContainerClient.UploadBlob(fileName, pictureData)
         |> ignore // response
