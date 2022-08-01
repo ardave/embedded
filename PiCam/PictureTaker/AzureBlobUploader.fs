@@ -3,18 +3,21 @@
     open System
     open System.IO
     open Azure.Storage.Blobs
-    open Azure.Storage.Blobs.Models
-    open Azure.Storage.Blobs.Specialized
 
-    let sasToken = Environment.GetEnvironmentVariable "SasToken"
-    let azureStorageAccountName = Environment.GetEnvironmentVariable "AzureStorageAccountName"
-    let azureBlobContainerName = Environment.GetEnvironmentVariable "AzureBlobContainerName"
-    let blobUri = Uri $"https://{azureStorageAccountName}.blob.core.windows.net?{sasToken}"
+    let private envVarOrFail varName =
+        if String.IsNullOrWhiteSpace (Environment.GetEnvironmentVariable varName) then
+            failwith $"Missing environment variable: '{varName}'"
+        else
+            Environment.GetEnvironmentVariable varName      
 
-    let uploadPicture (stream: Stream) = 
+    let sasUri() = "SasUri" |> envVarOrFail |> Uri
+
+    let azureBlobContainerName() = envVarOrFail "BlobContainerName"
+        
+    let uploadPicture (blobUri: Uri) azureBlobContainerName (stream: Stream) = 
         let blobServiceClient = BlobServiceClient(blobUri, null)
         let _blobContainerClient = blobServiceClient.GetBlobContainerClient azureBlobContainerName
         let n = DateTime.UtcNow
         let fileName = $"{n.Year}-{n.Month}-{n.Day} {n.Hour}:{n.Minute}:{n.Second}Z.jpg"
-        _blobContainerClient.UploadBlob("filename.jpg", stream)
+        _blobContainerClient.UploadBlob(fileName, stream)
         |> ignore // response

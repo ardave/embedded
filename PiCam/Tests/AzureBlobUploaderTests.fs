@@ -5,8 +5,11 @@ open System.IO
 open Xunit
 
 [<Fact>]
-let ``Azure Storabe Blob Upload Integration Test`` () =
-    let fileStream = File.OpenRead "test-image.jpg"
+let ``Azure Storabe Blob Upload Integration Test`` (): unit =
+    let uri = Uri ""
+    let blobContainerName = "picam"
     
-    AzureBlobUploader.uploadPicture fileStream
+    "test-image.jpg"
+    |> File.OpenRead
+    |> AzureBlobUploader.uploadPicture uri blobContainerName
 

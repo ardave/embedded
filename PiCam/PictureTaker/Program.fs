@@ -1,4 +1,6 @@
 ﻿
-Orchestrator.loop PictureTaker.takePicture AzureFunctionInteractor.nextPictureIn AzureBlobUploader.uploadPicture
+let uploadPicture = AzureBlobUploader.uploadPicture (AzureBlobUploader.blobUri()) (AzureBlobUploader.azureBlobContainerName())
+
+Orchestrator.loop PictureTaker.takePicture AzureFunctionInteractor.nextPictureIn uploadPicture
 
 printfn "Exiting ..."
