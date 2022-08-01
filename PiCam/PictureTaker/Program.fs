@@ -1,5 +1,5 @@
 ﻿
-let uploadPicture = AzureBlobUploader.uploadPicture (AzureBlobUploader.blobUri()) (AzureBlobUploader.azureBlobContainerName())
+let uploadPicture = AzureBlobUploader.uploadPicture (AzureBlobUploader.sasUri()) (AzureBlobUploader.azureBlobContainerName())
 
 Orchestrator.loop PictureTaker.takePicture AzureFunctionInteractor.nextPictureIn uploadPicture
 
