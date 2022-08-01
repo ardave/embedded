@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2C23E126-B4BC-49C8-A6F5-58F8F695E4F2}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "PictureTaker", "PictureTaker\PictureTaker.fsproj", "{5942B3D2-1C2B-47C0-995B-DE1D54ED64B4}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Tests", "Tests\Tests.fsproj", "{992089DA-E775-4253-9D05-845CC045ED7A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5942B3D2-1C2B-47C0-995B-DE1D54ED64B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5942B3D2-1C2B-47C0-995B-DE1D54ED64B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5942B3D2-1C2B-47C0-995B-DE1D54ED64B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5942B3D2-1C2B-47C0-995B-DE1D54ED64B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{992089DA-E775-4253-9D05-845CC045ED7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{992089DA-E775-4253-9D05-845CC045ED7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{992089DA-E775-4253-9D05-845CC045ED7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{992089DA-E775-4253-9D05-845CC045ED7A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {56132CD7-465A-4D15-938B-BCBF28C01CD6}
+	EndGlobalSection
+EndGlobal
