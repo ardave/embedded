@@ -14,10 +14,16 @@
 
     let azureBlobContainerName() = envVarOrFail "BLOBCONTAINERNAME"
         
-    let uploadPicture (blobUri: Uri) azureBlobContainerName (pictureData: BinaryData) = 
+    let uploadPicture (blobUri: Uri) azureBlobContainerName (pictureStream: Stream) = 
+        printfn $"Uploading picture at {DateTime.Now}"
+        let sw = System.Diagnostics.Stopwatch.StartNew()
+
         let blobServiceClient = BlobServiceClient(blobUri, null)
         let _blobContainerClient = blobServiceClient.GetBlobContainerClient azureBlobContainerName
         let n = DateTime.UtcNow
         let fileName = $"{n.Year}-{n.Month}-{n.Day} {n.Hour}:{n.Minute}:{n.Second}Z.jpg"
-        _blobContainerClient.UploadBlob(fileName, pictureData)
+        pictureStream.Position <- 0
+        _blobContainerClient.UploadBlob(fileName, pictureStream)
         |> ignore // response
+
+        printfn $"Upload took {sw.ElapsedMilliseconds} ms."

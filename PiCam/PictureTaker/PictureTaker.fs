@@ -20,12 +20,15 @@
         inputStream.CopyTo(memoryStream)
         memoryStream.ToArray()
 
-    let takePicture() : BinaryData =
-        use msch = new MemoryStreamCaptureHandler()
+    let takePicture() : Stream =
+        printfn $"Taking picture at {DateTime.Now}"
+        let sw = System.Diagnostics.Stopwatch.StartNew()
+        let msch = new MemoryStreamCaptureHandler()
     
         cam.TakePicture(msch, MMALEncoding.JPEG, MMALEncoding.I420)
         |> Async.AwaitTask
         |> Async.RunSynchronously
         
-        BinaryData.FromStream msch.CurrentStream
-      //|> streamToBytes
+        printfn $"Picture took {sw.ElapsedMilliseconds} ms."
+
+        msch.CurrentStream
