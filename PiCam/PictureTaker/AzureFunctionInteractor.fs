@@ -6,12 +6,19 @@
 
     let private queue = Queue<TimeSpan>()
     queue.Enqueue(TimeSpan.FromMinutes 0.)
-    queue.Enqueue(TimeSpan.FromMinutes 15.)
-    queue.Enqueue(TimeSpan.FromMinutes 15.)
-    queue.Enqueue(TimeSpan.FromMinutes 15.)
+    queue.Enqueue(TimeSpan.FromMinutes 1.)
+    queue.Enqueue(TimeSpan.FromMinutes 1.)
+    queue.Enqueue(TimeSpan.FromMinutes 1.)
+    queue.Enqueue(TimeSpan.FromMinutes 1.)
+    queue.Enqueue(TimeSpan.FromMinutes 1.)
+    queue.Enqueue(TimeSpan.FromMinutes 1.)
+    queue.Enqueue(TimeSpan.FromMinutes 1.)
+    queue.Enqueue(TimeSpan.FromMinutes 1.)
+    queue.Enqueue(TimeSpan.FromMinutes 1.)
     
     let nextPictureIn() = 
-        if queue.Count = 0 then
-            NextOperation.ExitLoop
-        else
-            NextOperation.TakeNextPictureIn (queue.Dequeue())
+        NextOperation.TakeNextPictureIn (TimeSpan.FromHours 1.)
+        // if queue.Count = 0 then
+        //     NextOperation.ExitLoop
+        // else
+        //     NextOperation.TakeNextPictureIn (queue.Dequeue())
