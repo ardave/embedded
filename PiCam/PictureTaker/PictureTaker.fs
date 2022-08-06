@@ -8,6 +8,7 @@
     open MMALSharp.Common.Utility
     open MMALSharp.Handlers
     open Microsoft.Extensions.Logging
+    open Types
 
 
     let private microsecondsPerSecond = 1000000.
@@ -23,8 +24,8 @@
         inputStream.CopyTo(memoryStream)
         memoryStream.ToArray()
 
-    let takePicture() : Stream =
-        log.Info("Taking picture at {now}", DateTime.Now)
+    let takePicture (log: MyLogger) : Stream =
+        log.Info $"Taking picture at {DateTime.Now}"
         let sw = System.Diagnostics.Stopwatch.StartNew()
         let msch = new MemoryStreamCaptureHandler()
     
@@ -32,5 +33,5 @@
         |> Async.AwaitTask
         |> Async.RunSynchronously
         
-        log.Info("Camera pictures is {picturesSize} bytes and took {milliseconds} ms.", bytes.Length, sw.ElapsedMilliseconds)
+        log.Info $"Camera pictures took {sw.ElapsedMilliseconds} ms."
         msch.CurrentStream

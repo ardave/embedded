@@ -1,6 +1,13 @@
-﻿
-//let uploadPicture = AzureBlobUploader.uploadPicture (AzureBlobUploader.sasUri()) (AzureBlobUploader.azureBlobContainerName())
+﻿open Types
 
-//Orchestrator.loop PictureTaker.takePicture AzureFunctionInteractor.nextPictureIn uploadPicture
+let myLogger: MyLogger = {
+    Info = printfn "%s"
+}
+
+let uploadPicture = AzureBlobUploader.uploadPicture myLogger (AzureBlobUploader.sasUri()) (AzureBlobUploader.azureBlobContainerName())
+
+let takePicture() = PictureTaker.takePicture myLogger
+
+Orchestrator.loop takePicture AzureFunctionInteractor.nextPictureIn uploadPicture
 
 printfn "Deprecated ..."

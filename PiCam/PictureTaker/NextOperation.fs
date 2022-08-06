@@ -8,10 +8,10 @@
     | TakeNextPictureIn of TimeSpan
 
     type MyLogger = {
-        Info : (string * obj[]) -> unit
+        Info : string -> unit
     }
 
     module MyLogger =
         let fromILogger (i: ILogger) = {
-             Info = fun (msg, args) -> i.LogInformation(msg, args)
+             Info = i.LogInformation
         }

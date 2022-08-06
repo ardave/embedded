@@ -16,17 +16,18 @@ type Worker(logger: ILogger<Worker>) =
     let uploadPicture = AzureBlobUploader.uploadPicture myLogger (AzureBlobUploader.sasUri()) (AzureBlobUploader.azureBlobContainerName())
 
     override _.ExecuteAsync(ct: CancellationToken) =
-        let mutable clientSaysToKeepGoing = true
-        async {
-            while not ct.IsCancellationRequested && clientSaysToKeepGoing do
+        let rec loop() = 
+            if not ct.IsCancellationRequested then                
                 match AzureFunctionInteractor.nextPictureIn() with
-                | NextOperation.ExitLoop -> clientSaysToKeepGoing <- false
+                | NextOperation.ExitLoop -> ()
                 | NextOperation.TakeNextPictureIn timeSpan ->
-                    do! Async.Sleep timeSpan
-                    PictureTaker.takePicture logger
-                    |> uploadPicture           
-                
-                logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now)
-        }
+                    Thread.Sleep timeSpan
+                    PictureTaker.takePicture myLogger
+                    |> uploadPicture
+                    loop()
+        logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now)
+        loop()
+        
+        async { return () }
         |> Async.StartAsTask
         :> Task // need to convert into the parameter-less task

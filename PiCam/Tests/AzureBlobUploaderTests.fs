@@ -7,7 +7,7 @@ open Microsoft.Extensions.Logging
 open Types
 
 let myLogger: MyLogger = {
-    Info = fun (msg, args) -> ()
+    Info = fun msg -> ()
 }
     
 
