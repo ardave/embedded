@@ -1,8 +1,11 @@
 ﻿module AzureBlobUploader
 
     open System
+    open System.Diagnostics
     open System.IO
     open Azure.Storage.Blobs
+    open Microsoft.Extensions.Logging
+    open Types
 
     let private envVarOrFail varName =
         if String.IsNullOrWhiteSpace (Environment.GetEnvironmentVariable varName) then
@@ -13,17 +16,22 @@
     let sasUri() = "SASURI" |> envVarOrFail |> Uri
 
     let azureBlobContainerName() = envVarOrFail "BLOBCONTAINERNAME"
-        
-    let uploadPicture (blobUri: Uri) azureBlobContainerName (pictureStream: Stream) = 
-        printfn $"Uploading picture at {DateTime.Now}"
-        let sw = System.Diagnostics.Stopwatch.StartNew()
 
+    let zeroPad i = if i < 10 then "0" + string i else string i
+
+    let private bytesToStream ary =
+        let stream = new MemoryStream()
+        stream.Write(ary, 0, ary.Length)
+        stream
+        
+    let uploadPicture (log: MyLogger) (blobUri: Uri) azureBlobContainerName (pictureStream: Stream) = 
+        log.Info("Uploading picture at {now}", DateTime.Now)
+        let sw = Stopwatch.StartNew()
         let blobServiceClient = BlobServiceClient(blobUri, null)
         let _blobContainerClient = blobServiceClient.GetBlobContainerClient azureBlobContainerName
         let n = DateTime.UtcNow
-        let fileName = $"{n.Year}-{n.Month}-{n.Day} {n.Hour}:{n.Minute}:{n.Second}Z.jpg"
+        let fileName = $"{n.Year}-{zeroPad n.Month}-{zeroPad n.Day} {zeroPad n.Hour}:{zeroPad n.Minute}:{zeroPad n.Second}Z.jpg"
         pictureStream.Position <- 0
-        _blobContainerClient.UploadBlob(fileName, pictureStream)
+        _blobContainerClient.UploadBlob(fileName, stream)
         |> ignore // response
-
-        printfn $"Upload took {sw.ElapsedMilliseconds} ms."
+        log.Info("Uploaded {filename} in {milliseconds} ms.", [| fileName, sw.ElapsedMilliseconds |])
