@@ -4,7 +4,7 @@ open System
 open System.IO
 open Xunit
 open Microsoft.Extensions.Logging
-open Types
+open PiCamCommon
 
 let myLogger: MyLogger = {
     Info = fun msg -> ()

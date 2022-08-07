@@ -5,7 +5,7 @@
     open System.IO
     open Azure.Storage.Blobs
     open Microsoft.Extensions.Logging
-    open Types
+    open PiCamCommon
 
     let private envVarOrFail varName =
         if String.IsNullOrWhiteSpace (Environment.GetEnvironmentVariable varName) then

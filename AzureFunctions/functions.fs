@@ -10,6 +10,7 @@ open Microsoft.AspNetCore.Http
 open Newtonsoft.Json
 open Microsoft.Extensions.Logging
 open Giraffe.ViewEngine
+open PiCamCommon
 
 module incursions =
     // Define a nullable container to deserialize into.
@@ -107,8 +108,41 @@ module incursions =
 
             let data = JsonConvert.DeserializeObject<NameContainer>(reqBody)
 
-            
-            //return OkObjectResult(htmlBody) :> IActionResult
-
             return ContentResult(Content=htmlBody, ContentType="text/html") :> IActionResult
+        } |> Async.StartAsTask
+
+    [<FunctionName("nextpicture")>]
+    let nextPicture ([<HttpTrigger(AuthorizationLevel.Function, "get", Route = null)>]req: HttpRequest) (log: ILogger): Task<IActionResult> =
+        async {
+            let envVars = Environment.GetEnvironmentVariables()
+            
+            let model: PiCamCommon.NextPictureModel =
+                if Convert.ToBoolean(Environment.GetEnvironmentVariable "OUTOFTOWN") then
+                    { NextPictureIn = Some(TimeSpan.FromMinutes 15.) }
+                else
+                    let mstZone = TimeZoneInfo.FindSystemTimeZoneById("Mountain Standard Time")
+                    let mstTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, mstZone)
+                    if mstTime.Hour >= 6 && mstTime.Hour <= 9 then
+                        { NextPictureIn = Some(TimeSpan.FromMinutes 15.) }
+                    else
+                        { NextPictureIn = None }
+
+            
+            let json = model |> NextPictureModel.serialize
+          
+            return ContentResult(Content=htmlBody, ContentType="application/json") :> IActionResult
+        } |> Async.StartAsTask
+
+    [<FunctionName("latestpicture")>]
+    let latestPicture ([<HttpTrigger(AuthorizationLevel.Function, "post", Route = null)>]req: HttpRequest) (log: ILogger): Task<IActionResult> =
+        async {
+                let addMeHtml: string =
+                    html [] [
+                        body[][
+                            p[][str "add me"]
+                        ]
+                    ] |> RenderView.AsString.htmlDocument
+
+            
+            return ContentResult(Content=addMeHtml, ContentType="text/html") :> IActionResult
         } |> Async.StartAsTask

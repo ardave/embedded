@@ -7,7 +7,7 @@ open System.Threading
 open System.Threading.Tasks
 open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.Logging
-open Types
+open PiCamCommon
 
 type Worker(logger: ILogger<Worker>) =
     inherit BackgroundService()

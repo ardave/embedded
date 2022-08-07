@@ -23,4 +23,7 @@
   <ItemGroup>
   <Compile Include="functions.fs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PiCam\Common\Common.fsproj" />
+  </ItemGroup>
 </Project>

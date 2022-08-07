@@ -2,7 +2,10 @@
 
     open System
     open System.Collections.Generic
-    open Types    
+    open System.Net.Http
+    open PiCamCommon    
+
+    let private client = new HttpClient()
 
     let private queue = Queue<TimeSpan>()
     queue.Enqueue(TimeSpan.FromMinutes 0.)
@@ -15,3 +18,7 @@
             NextOperation.ExitLoop
         else
             NextOperation.TakeNextPictureIn (queue.Dequeue())
+
+    let nextPictureInHttp() =
+        let response = client.GetAsync("uri") |> Async.AwaitTask |> Async.RunSynchronously
+        ()
