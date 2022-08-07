@@ -21,7 +21,7 @@ type Worker(logger: ILogger<Worker>) =
                 match AzureFunctionInteractor.nextPictureIn() with
                 | NextOperation.ExitLoop -> ()
                 | NextOperation.TakeNextPictureIn timeSpan ->
-                    Thread.Sleep timeSpan
+                    Misc.sleepInOneSecondIncrements ct timeSpan
                     PictureTaker.takePicture myLogger
                     |> uploadPicture
                     loop()

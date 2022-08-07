@@ -18,6 +18,24 @@ module incursions =
     type NameContainer() =
         member val Name = "" with get, set
 
+    let calculateNextPicture (getEnvironmentVariable: string->string) (utcNow: DateTime): TimeSpan =
+        if utcNow.Kind <> DateTimeKind.Utc then
+            failwith $"DateTime.Kind must be Utc, and not {utcNow.Kind}"
+
+        if Convert.ToBoolean(getEnvironmentVariable "OUTOFTOWN") then
+                    TimeSpan.FromMinutes 15.
+                else
+                    let mstZone = TimeZoneInfo.FindSystemTimeZoneById("Mountain Standard Time")
+                    let mstTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, mstZone)
+                    if mstTime.Hour >= 6 && mstTime.Hour <= 9 then
+                        TimeSpan.FromMinutes 15.
+                    else
+                        let x = mstTime.AddDays 1.
+                        let nextStart = DateTime(x.Year, x.Month, x.Day, 6, x.Minute, x.Second, x.Millisecond)
+                        let sleepForTimeSpan = nextStart - mstTime
+                        
+                        sleepForTimeSpan
+
     // For convenience, it's better to have a central place for the literal.
     [<Literal>]
     let Name = "name"
@@ -116,19 +134,23 @@ module incursions =
         async {
             let envVars = Environment.GetEnvironmentVariables()
             
-            let model: PiCamCommon.NextPictureModel =
+            let model =
                 if Convert.ToBoolean(Environment.GetEnvironmentVariable "OUTOFTOWN") then
-                    { NextPictureIn = Some(TimeSpan.FromMinutes 15.) }
+                    NextOperation.TakeNextPictureIn (TimeSpan.FromMinutes 15.)
                 else
                     let mstZone = TimeZoneInfo.FindSystemTimeZoneById("Mountain Standard Time")
                     let mstTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, mstZone)
                     if mstTime.Hour >= 6 && mstTime.Hour <= 9 then
-                        { NextPictureIn = Some(TimeSpan.FromMinutes 15.) }
+                        NextOperation.TakeNextPictureIn (TimeSpan.FromMinutes 15.)
                     else
-                        { NextPictureIn = None }
+                        let x = mstTime.AddDays 1.
+                        let nextStart = DateTime(x.Year, x.Month, x.Day, 6, x.Minute, x.Second, x.Millisecond)
+                        let sleepForTimeSpan = nextStart - mstTime
+                        
+                        NextOperation.TakeNextPictureIn sleepForTimeSpan
 
             
-            let json = model |> NextPictureModel.serialize
+            let json = model |> NextOperation.serialize
           
             return ContentResult(Content=htmlBody, ContentType="application/json") :> IActionResult
         } |> Async.StartAsTask

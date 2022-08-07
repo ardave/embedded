@@ -13,12 +13,14 @@
     queue.Enqueue(TimeSpan.FromMinutes 15.)
     queue.Enqueue(TimeSpan.FromMinutes 15.)
     queue.Enqueue(TimeSpan.FromMinutes 15.)
+
+    let getNext =
+        seq { yield NextOperation.TakeNextPictureIn (TimeSpan.FromSeconds 0.)
+              while true do
+                yield NextOperation.TakeNextPictureIn (TimeSpan.FromMinutes 15.) }
+
     
-    let nextPictureIn(): NextOperation = 
-        if queue.Count = 0 then
-            NextOperation.ExitLoop
-        else
-            NextOperation.TakeNextPictureIn (queue.Dequeue())
+    let nextPictureIn(): NextOperation = getNext |> Seq.head
 
     let nextPictureInHttp(): NextOperation =
         let response = client.GetAsync("uri") |> Async.AwaitTask |> Async.RunSynchronously
