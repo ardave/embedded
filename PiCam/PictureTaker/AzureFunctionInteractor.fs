@@ -8,19 +8,17 @@
 
     let private client = new HttpClient()
 
-    let private queue = Queue<TimeSpan>()
-    queue.Enqueue(TimeSpan.FromMinutes 0.)
-    queue.Enqueue(TimeSpan.FromMinutes 15.)
-    queue.Enqueue(TimeSpan.FromMinutes 15.)
-    queue.Enqueue(TimeSpan.FromMinutes 15.)
+    let mutable isFirst = None
+   
+    let nextPictureIn() =
+        match isFirst with
+        | Some _ -> 15.
+        | None -> 
+            isFirst <- Some()
+            0.
+        |> TimeSpan.FromMinutes
+        |> NextOperation.TakeNextPictureIn    
 
-    let getNext =
-        seq { yield NextOperation.TakeNextPictureIn (TimeSpan.FromSeconds 0.)
-              while true do
-                yield NextOperation.TakeNextPictureIn (TimeSpan.FromMinutes 15.) }
-
-    
-    let nextPictureIn(): NextOperation = getNext |> Seq.head
 
     let nextPictureInHttp(): NextOperation =
         let response = client.GetAsync("uri") |> Async.AwaitTask |> Async.RunSynchronously
