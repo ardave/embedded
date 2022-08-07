@@ -8,7 +8,7 @@
     open MMALSharp.Common.Utility
     open MMALSharp.Handlers
     open Microsoft.Extensions.Logging
-    open Types
+    open PiCamCommon
 
 
     let private microsecondsPerSecond = 1000000.

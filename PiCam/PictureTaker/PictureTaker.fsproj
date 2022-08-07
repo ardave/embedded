@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="NextOperation.fs" />
     <Compile Include="PictureTaker.fs" />
     <Compile Include="AzureFunctionInteractor.fs" />
     <Compile Include="Orchestrator.fs" />
@@ -18,6 +17,10 @@
   <ItemGroup>
     <PackageReference Include="Azure.Storage.Blobs" Version="12.13.0" />
     <PackageReference Include="MMALSharp" Version="0.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.fsproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 ﻿module Orchestrator
 
-    open Types
+    open PiCamCommon
 
     open System
     open System.Threading

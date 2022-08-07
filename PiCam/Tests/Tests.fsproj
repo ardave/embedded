@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="TimeCalculationTests.fs" />
+    <Compile Include="SerializationTests.fs" />
     <Content Include="test-image.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -30,7 +32,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\AzureFunctions\embedded.fsproj" />
+    <ProjectReference Include="..\Common\Common.fsproj" />
     <ProjectReference Include="..\PictureTaker\PictureTaker.fsproj" />
+    <ProjectReference Include="..\SystemdWorker\SystemdWorker.fsproj" />
   </ItemGroup>
 
 </Project>

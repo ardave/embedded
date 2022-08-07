@@ -1,4 +1,4 @@
-﻿open Types
+﻿open PiCamCommon
 
 let myLogger: MyLogger = {
     Info = printfn "%s"

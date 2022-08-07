@@ -7,7 +7,7 @@ open System.Threading
 open System.Threading.Tasks
 open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.Logging
-open Types
+open PiCamCommon
 
 type Worker(logger: ILogger<Worker>) =
     inherit BackgroundService()
@@ -21,7 +21,7 @@ type Worker(logger: ILogger<Worker>) =
                 match AzureFunctionInteractor.nextPictureIn() with
                 | NextOperation.ExitLoop -> ()
                 | NextOperation.TakeNextPictureIn timeSpan ->
-                    Thread.Sleep timeSpan
+                    Misc.sleepInOneSecondIncrements ct timeSpan
                     PictureTaker.takePicture myLogger
                     |> uploadPicture
                     loop()
