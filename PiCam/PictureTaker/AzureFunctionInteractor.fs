@@ -8,13 +8,16 @@
 
     let private client = new HttpClient()
 
-    let getNext =
-        seq { yield NextOperation.TakeNextPictureIn (TimeSpan.FromSeconds 0.)
-              while true do
-                yield NextOperation.TakeNextPictureIn (TimeSpan.FromMinutes 15.) }
-
-    
-    let nextPictureIn(): NextOperation = getNext |> Seq.head
+    let mutable isFirst = None
+   
+    let nextPictureIn() =
+        match isFirst with
+        | Some _ -> 15.
+        | None -> 
+            isFirst <- Some()
+            0.
+        |> TimeSpan.FromMinutes
+        |> NextOperation.TakeNextPictureIn    
 
     let nextPictureInHttp(): NextOperation =
         let response = client.GetAsync("uri") |> Async.AwaitTask |> Async.RunSynchronously
