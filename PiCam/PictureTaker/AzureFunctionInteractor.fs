@@ -30,4 +30,3 @@
             content |> JsonConvert.DeserializeObject<NextOperation>
         else
             failwith $"Unsuccessful status code {response.StatusCode} getting next picture TimeSpan, with content: '{content}'."           
-    
