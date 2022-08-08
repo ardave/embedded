@@ -35,6 +35,7 @@ module Misc =
     // Stackoverflow on "Sleeping with a cancellation token" seemed fraught,
     // so I'm doing this my way
     let sleepInOneSecondIncrements (ct: CancellationToken) (ts: TimeSpan) =
-        for _ in 1 .. ts.Seconds do
+        for _ in 1 .. int ts.TotalSeconds do
             if not ct.IsCancellationRequested then
                 Thread.Sleep (TimeSpan.FromSeconds 1.)
+              
