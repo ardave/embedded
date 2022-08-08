@@ -38,4 +38,10 @@ module Misc =
         for _ in 1 .. int ts.TotalSeconds do
             if not ct.IsCancellationRequested then
                 Thread.Sleep (TimeSpan.FromSeconds 1.)
+
+    let envVarOrFail varName =
+        if String.IsNullOrWhiteSpace (Environment.GetEnvironmentVariable varName) then
+            failwith $"Missing environment variable: '{varName}'"
+        else
+            Environment.GetEnvironmentVariable varName   
               

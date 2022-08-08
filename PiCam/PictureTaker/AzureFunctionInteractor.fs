@@ -9,10 +9,12 @@
     let private client = new HttpClient()
 
     let mutable isFirst = None
+
+    let wait a = a |> Async.AwaitTask |> Async.RunSynchronously
    
     let nextPictureIn() =
         match isFirst with
-        | Some _ -> 15.
+        | Some _ -> 60.
         | None -> 
             isFirst <- Some()
             0.
@@ -20,13 +22,12 @@
         |> NextOperation.TakeNextPictureIn    
 
 
-    let nextPictureInHttp(): NextOperation =
-        let response = client.GetAsync("uri") |> Async.AwaitTask |> Async.RunSynchronously
-        let content: string = response.Content.ReadAsStringAsync() |> Async.AwaitTask |> Async.RunSynchronously
+    let nextPictureInHttp (uri: Uri): NextOperation =
+        let response = client.GetAsync uri |> wait
+        let content: string = response.Content.ReadAsStringAsync() |> wait
 
         if response.IsSuccessStatusCode then
-            failwith "not implemented"
-            //content |> JsonConvert.DeserializeObject<NextPictureModel> |> NextOperation.TakeNextPictureIn
+            content |> JsonConvert.DeserializeObject<NextOperation>
         else
             failwith $"Unsuccessful status code {response.StatusCode} getting next picture TimeSpan, with content: '{content}'."           
     

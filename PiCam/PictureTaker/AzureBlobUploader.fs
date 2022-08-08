@@ -4,26 +4,15 @@
     open System.Diagnostics
     open System.IO
     open Azure.Storage.Blobs
-    open Microsoft.Extensions.Logging
     open PiCamCommon
-
-    let private envVarOrFail varName =
-        if String.IsNullOrWhiteSpace (Environment.GetEnvironmentVariable varName) then
-            failwith $"Missing environment variable: '{varName}'"
-        else
-            Environment.GetEnvironmentVariable varName      
-
+    open PiCamCommon.Misc
+    
     let sasUri() = "SASURI" |> envVarOrFail |> Uri
 
     let azureBlobContainerName() = envVarOrFail "BLOBCONTAINERNAME"
 
     let zeroPad i = if i < 10 then "0" + string i else string i
 
-    let private bytesToStream ary =
-        let stream = new MemoryStream()
-        stream.Write(ary, 0, ary.Length)
-        stream
-        
     let uploadPicture (log: MyLogger) (blobUri: Uri) azureBlobContainerName (pictureStream: Stream) = 
         log.Info $"Uploading picture at {DateTime.Now}"
         let sw = Stopwatch.StartNew()
