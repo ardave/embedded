@@ -30,14 +30,20 @@ module incursions =
             let mstZone = TimeZoneInfo.FindSystemTimeZoneById("Mountain Standard Time")
             let mstTime = TimeZoneInfo.ConvertTimeFromUtc(utcNow, mstZone)
 
-            if mstTime.TimeOfDay >= TimeSpan.Parse("05:45:00") && mstTime.TimeOfDay <= TimeSpan.Parse("08:45:00") then 
-                TakeNextPictureIn (TimeSpan.FromMinutes 15.)
-            else
+            if mstTime.TimeOfDay < TimeSpan.Parse("05:45:00") then
+                let x = mstTime
+                let nextStart = DateTime(x.Year, x.Month, x.Day, 5, 45, x.Second, x.Millisecond)
+                let sleepForTimeSpan = nextStart - mstTime
+                TakeNextPictureIn sleepForTimeSpan
+            else if mstTime.TimeOfDay > TimeSpan.Parse("08:45:00") then
                 let x = mstTime.AddDays 1.
-                let nextStart = DateTime(x.Year, x.Month, x.Day, 6, x.Minute, x.Second, x.Millisecond)
+                let nextStart = DateTime(x.Year, x.Month, x.Day, 5, 45, x.Second, x.Millisecond)
                 let sleepForTimeSpan = nextStart - mstTime
                         
                 TakeNextPictureIn sleepForTimeSpan
+            else
+                TakeNextPictureIn (TimeSpan.FromMinutes 15.)
+
 
     // For convenience, it's better to have a central place for the literal.
     [<Literal>]
