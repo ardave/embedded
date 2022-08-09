@@ -7,7 +7,7 @@
 
     let rec loop takePicture nextPictureIn uploadPicture =
         match nextPictureIn() with
-        | NextOperation.ExitLoop -> ()
+        | NextOperation.SleepForAWhile -> Thread.Sleep (TimeSpan.FromMinutes 15.)
         | NextOperation.TakeNextPictureIn timeSpan ->
             Thread.Sleep timeSpan
             takePicture() |> uploadPicture           

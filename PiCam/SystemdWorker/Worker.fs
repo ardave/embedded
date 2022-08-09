@@ -19,7 +19,8 @@ type Worker(logger: ILogger<Worker>) =
         let rec loop() = 
             if not ct.IsCancellationRequested then                
                 match AzureFunctionInteractor.nextPictureIn() with
-                | NextOperation.ExitLoop -> ()
+                | NextOperation.SleepForAWhile ->
+                    Misc.sleepInOneSecondIncrements ct (TimeSpan.FromMinutes 15.)
                 | NextOperation.TakeNextPictureIn timeSpan ->
                     logger.LogInformation $"Sleeping for {timeSpan}"
                     Misc.sleepInOneSecondIncrements ct timeSpan

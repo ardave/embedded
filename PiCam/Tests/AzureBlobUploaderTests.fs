@@ -12,6 +12,7 @@ let myLogger: MyLogger = {
     
 
 [<Fact>]
+[<Trait("TestType", "Integration")>]
 let ``Azure Storabe Blob Upload Integration Test`` (): unit =
     let uri = Uri ""
     let blobContainerName = "picam"

@@ -5,17 +5,9 @@ open System.Threading
 open Microsoft.Extensions.Logging
 open Newtonsoft.Json
 
-//[<CLIMutable>]
-//type NextPictureModel = {
-//    NextPictureIn: TimeSpan option
-//}
-
-//module NextPictureModel =
-//    let serialize (model: NextPictureModel): string = JsonConvert.SerializeObject model
-//    let deserialize (json: string): NextPictureModel = JsonConvert.DeserializeObject<NextPictureModel> json
 
 type NextOperation =
-| ExitLoop // mainly used for testing.
+| SleepForAWhile
 | TakeNextPictureIn of TimeSpan
 
 module NextOperation =

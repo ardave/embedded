@@ -18,23 +18,26 @@ module incursions =
     type NameContainer() =
         member val Name = "" with get, set
 
-    let calculateNextPicture (getEnvironmentVariable: string->string) (utcNow: DateTime): TimeSpan =
+    let calculateNextPicture (getEnvironmentVariable: string->string) (utcNow: DateTime): NextOperation =
         if utcNow.Kind <> DateTimeKind.Utc then
             failwith $"DateTime.Kind must be Utc, and not {utcNow.Kind}"
 
-        if Convert.ToBoolean(getEnvironmentVariable "OUTOFTOWN") then
-                    TimeSpan.FromMinutes 15.
-                else
-                    let mstZone = TimeZoneInfo.FindSystemTimeZoneById("Mountain Standard Time")
-                    let mstTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, mstZone)
-                    if mstTime.Hour >= 6 && mstTime.Hour <= 9 then
-                        TimeSpan.FromMinutes 15.
-                    else
-                        let x = mstTime.AddDays 1.
-                        let nextStart = DateTime(x.Year, x.Month, x.Day, 6, x.Minute, x.Second, x.Millisecond)
-                        let sleepForTimeSpan = nextStart - mstTime
+        if Convert.ToBoolean(getEnvironmentVariable "DISABLECAMERA") then
+            SleepForAWhile
+        else if Convert.ToBoolean(getEnvironmentVariable "OUTOFTOWN") then
+            TakeNextPictureIn (TimeSpan.FromMinutes 15.)
+        else
+            let mstZone = TimeZoneInfo.FindSystemTimeZoneById("Mountain Standard Time")
+            let mstTime = TimeZoneInfo.ConvertTimeFromUtc(utcNow, mstZone)
+
+            if mstTime.TimeOfDay >= TimeSpan.Parse("05:45:00") && mstTime.TimeOfDay <= TimeSpan.Parse("08:45:00") then 
+                TakeNextPictureIn (TimeSpan.FromMinutes 15.)
+            else
+                let x = mstTime.AddDays 1.
+                let nextStart = DateTime(x.Year, x.Month, x.Day, 6, x.Minute, x.Second, x.Millisecond)
+                let sleepForTimeSpan = nextStart - mstTime
                         
-                        sleepForTimeSpan
+                TakeNextPictureIn sleepForTimeSpan
 
     // For convenience, it's better to have a central place for the literal.
     [<Literal>]
