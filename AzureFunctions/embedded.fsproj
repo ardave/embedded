@@ -3,7 +3,7 @@
         <Copy SourceFiles="host.json;local.settings.json" DestinationFolder="$(OutDir)" />
   </Target>
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <AzureFunctionsVersion>v4</AzureFunctionsVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
